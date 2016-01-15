@@ -72,7 +72,7 @@ true = Map.get(acc, :second_fn_passed)
 
 
 
-## Most of the code is directly taken from `plug`.
+## Most of the code is taken directly from `plug`.
 
 License for part of codes:
 
