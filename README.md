@@ -68,4 +68,5 @@ defmodule TestNext do
 end
 
 Plugin.call(TestNext, %{test1: true})
+TestNext.call(%{test1: true})
 ```

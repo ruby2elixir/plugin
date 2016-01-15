@@ -47,6 +47,7 @@ defmodule Plugin do
       {control, acc} when control in [:stop, :cont] ->
         acc
       _ ->
+        #plugin.call(value, opts)
         raise "expected #{inspect plugin}.call/2 to return :cont or :stop as first element of tuple)"
     end
   end
