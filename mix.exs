@@ -29,7 +29,7 @@ defmodule Plugin.Mixfile do
   defp deps do
     [
       {:mix_test_watch, "~> 0.2", only: :dev},
-      {:ex_spec, "~> 1.0"} #, only: :dev
+      {:ex_spec, "~> 1.0", only: :test}
     ]
   end
 end
