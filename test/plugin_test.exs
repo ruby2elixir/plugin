@@ -62,7 +62,7 @@ defmodule PluginTest do
       use Plugin.Builder
       plug :test1, []
 
-      def test1(acc, _) do
+      def test1(_acc, _) do
         "invalid string"
       end
     end
