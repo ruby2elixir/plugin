@@ -70,6 +70,38 @@ true = Map.get(acc, :first_fn_passed)
 true = Map.get(acc, :second_fn_passed)
 ```
 
+Module Plugin:
+
+
+```elixir
+defmodule PluginWithConfig do
+  use Plugin.Helpers # small convinience helpers
+  def init(opts) do
+    Map.put(opts, :current_ip, "0.0.0.0")
+  end
+
+  def call(acc, opts) do
+    acc
+    |> assign(:from, opts.current_ip)
+    |> assign(:extra, opts.extra_info)
+  end
+end
+
+defmodule BuilderUsesPlugingWithConfig do
+  use Plugin.Builder
+
+  plugin PluginWithConfig, %{extra_info: "some_info"}
+end
+
+acc = Plugin.call(BuilderUsesPlugingWithConfig, %{})
+%{assigns: %{from: "0.0.0.0"}} = acc
+%{assigns: %{extra: "some_info"}} = acc
+```
+
+
+To learn more about Plug please watch following freshly (2016/01) released videos:
+  - [Elixir Louisville: Plug, Friend of Web Developers](https://www.youtube.com/watch?v=-gev84S9_-c) -
+  - [Elixir Louisville: Plug, Friend of Web Developers - Demo](https://www.youtube.com/watch?v=tfRD_e-yvOE)
 
 
 ## Most of the code is taken directly from `plug`.
