@@ -8,14 +8,14 @@ defmodule Plugin.Builder do
       defmodule MyApp do
         use Plugin.Builder
 
-        plug Plugin.Logger
-        plug :hello, upper: true
+        plugin Plugin.Logger
+        plugin :hello, upper: true
 
         # A function from another module can be plugged too, provided it's
         # imported into the current module first.
 
         import AnotherModule, only: [interesting_plugin: 2]
-        plug :interesting_plugin
+        plugin :interesting_plugin
 
         def hello(acc, opts) do
           body = if opts[:upper], do: "WORLD", else: "world"
@@ -26,7 +26,7 @@ defmodule Plugin.Builder do
   Multiple plugins can be defined with the `plug/2` macro, forming a pipeline.
 
   The plugins in the pipeline will be executed in the order they've been added
-  through the `plug/2` macro. In the example above, `Plugin.Logger` will be
+  through the `plugin/2` macro. In the example above, `Plugin.Logger` will be
   called first and then the `:hello` function plugin will be called on the
   resulting value.
 
@@ -56,7 +56,7 @@ defmodule Plugin.Builder do
 
       defmodule PluginWithCustomOptions do
         use Plugin.Builder
-        plug Plugin.Logger
+        plugin Plugin.Logger
         def init(opts) do
           opts
         end
@@ -69,7 +69,7 @@ defmodule Plugin.Builder do
 
       defmodule PluginWithCustomCall do
         use Plugin.Builder
-        plug Plugin.Logger
+        plugin Plugin.Logger
 
         def call(acc, _opts) do
           super(acc, opts) # calls Plugin.Logger
@@ -97,7 +97,7 @@ defmodule Plugin.Builder do
       defoverridable [init: 1, call: 2]
 
       import Plugin.Helpers
-      import Plugin.Builder, only: [plug: 1, plug: 2]
+      import Plugin.Builder, only: [plugin: 1, plugin: 2]
 
       Module.register_attribute(__MODULE__, :plugins, accumulate: true)
       @before_compile Plugin.Builder
@@ -128,11 +128,11 @@ defmodule Plugin.Builder do
   for more information about adding plugins with guards see `compile/1`.
 
   ## Examples
-      plug Plugin.Logger             # Plugin module
-      plug :foo, some_options: true  # Plugin function
+      plugin Plugin.Logger             # Plugin module
+      plugin :foo, some_options: true  # Plugin function
   """
 
-  defmacro plug(plugin, opts \\ []) do
+  defmacro plugin(plugin, opts \\ []) do
     quote do
       @plugins {unquote(plugin), unquote(opts), true}
     end
@@ -155,7 +155,7 @@ defmodule Plugin.Builder do
   ## Examples
 
       Plugin.Builder.compile(env, [
-        {Plugin.Logger, [], true}, # no guards, as added by the Plugin.Builder.plug/2 macro
+        {Plugin.Logger, [], true}, # no guards, as added by the Plugin.Builder.plugin/2 macro
         {Plugin.Head, [], quote(do: a when is_binary(a))}
       ], [])
   """
@@ -201,7 +201,7 @@ defmodule Plugin.Builder do
     quote do
       case unquote(compile_guards(call, guards)) do
         %{halted: true} = acc ->
-          # unquote(log_halt(plug_type, plug, env, builder_opts))
+          unquote(log_halt(plugin_type, plugin, env, builder_opts))
           acc
         %{} = acc ->
           unquote(acc)

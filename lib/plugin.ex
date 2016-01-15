@@ -5,15 +5,15 @@ defmodule Plugin do
 
   There are two kind of plugs: function plugs and module plugs.
 
-  #### Function plugs
+  #### Function plugins
 
-  A function plug is any function that receives a connection and a set of
+  A function plugin is any function that receives a connection and a set of
   options and returns a connection. Its type signature must be:
-      (Plug.Conn.t, Plug.opts) :: Plug.Conn.t
+      (%{}, Plugin.opts) :: %{}
 
-  #### Module plugs
+  #### Module plugins
 
-  A module plug is an extension of the function plug. It is a module that must
+  A module plugin is an extension of the function plugin. It is a module that must
   export:
 
   * a `call/2` function with the signature defined above
@@ -22,12 +22,12 @@ defmodule Plugin do
   The result returned by `init/1` is passed as second argument to `call/2`. Note
   that `init/1` may be called during compilation and as such it must not return
   pids, ports or values that are not specific to the runtime.
-  The API expected by a module plug is defined as a behaviour by the
+  The API expected by a module plugin is defined as a behaviour by the
   `Plugin` module (this module).
 
   ## The Plugin pipeline
 
-  The `Plugin.Builder` module provides conveniences for building plug
+  The `Plugin.Builder` module provides conveniences for building plugin
   pipelines.
   """
 
@@ -40,7 +40,7 @@ defmodule Plugin do
   defcallback call(%{}, opts) :: %{}
 
   @doc """
-  Apply plugin to a acc with given optins.
+  Apply plugin to an acc with given optins.
   """
   def call(plugin, acc, opts \\ []) do
     case plugin.call(acc, opts) do

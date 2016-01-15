@@ -5,7 +5,7 @@ defmodule PluginTest do
   describe "single plugin" do
     defmodule SinglePlugin do
       use Plugin.Builder
-      plug :test1, []
+      plugin :test1, []
 
       def test1(acc, _) do
         if acc[:test1] do
@@ -31,8 +31,8 @@ defmodule PluginTest do
   describe "single plugin with multiple plug statements" do
     defmodule SinglePluginMultiStatements do
       use Plugin.Builder
-      plug :test1, []
-      plug :test2, []
+      plugin :test1, []
+      plugin :test2, []
 
       def test1(acc, _) do
         if acc[:test1] do
@@ -59,7 +59,7 @@ defmodule PluginTest do
   describe "requires a map as returned value" do
     defmodule NoMapReturn do
       use Plugin.Builder
-      plug :test1, []
+      plugin :test1, []
 
       def test1(_acc, _) do
         "invalid string"
@@ -77,7 +77,7 @@ defmodule PluginTest do
   describe "composed plugins" do
     defmodule Plugin1 do
       use Plugin.Builder
-      plug :first_fn
+      plugin :first_fn
 
       def first_fn(acc, _) do
         Map.put(acc, :first_fn_passed, true)
@@ -86,7 +86,7 @@ defmodule PluginTest do
 
     defmodule Plugin2 do
       use Plugin.Builder
-      plug :second_fn
+      plugin :second_fn
 
       def second_fn(acc, _) do
         Map.put(acc, :second_fn_passed, true)
@@ -95,15 +95,15 @@ defmodule PluginTest do
 
     defmodule Plugin3 do
       use Plugin.Builder
-      plug Plugin1
-      plug Plugin2
+      plugin Plugin1
+      plugin Plugin2
     end
 
     defmodule Plugin4EarlyHalt do
       use Plugin.Builder
-      plug :early_halt
-      plug Plugin1
-      plug Plugin2
+      plugin :early_halt
+      plugin Plugin1
+      plugin Plugin2
 
       def early_halt(acc, _) do
         halt(acc)
@@ -141,7 +141,7 @@ defmodule PluginTest do
     defmodule BuilderUsesPlugingWithConfig do
       use Plugin.Builder
 
-      plug PluginWithConfig, %{extra_info: "some_info"}
+      plugin PluginWithConfig, %{extra_info: "some_info"}
     end
 
     it "has information generated in `init`" do
