@@ -2,7 +2,6 @@ defmodule PluginTest do
   use ExSpec, async: true
   doctest Plugin
 
-  # we start with really stupid tests
   describe "single plugin" do
     defmodule SinglePlugin do
       use Plugin.Builder
@@ -29,7 +28,7 @@ defmodule PluginTest do
   end
 
 
-  describe "single plugin multiple plug statements" do
+  describe "single plugin with multiple plug statements" do
     defmodule SinglePluginMultiStatements do
       use Plugin.Builder
       plug :test1, []
@@ -121,6 +120,38 @@ defmodule PluginTest do
       acc = Plugin.call(Plugin4EarlyHalt, %{})
       refute Map.get(acc, :first_fn_passed)
       refute Map.get(acc, :second_fn_passed)
+    end
+  end
+
+
+  describe "plugins with configuration" do
+    defmodule PluginWithConfig do
+      use Plugin.Helpers
+      def init(opts) do
+        Map.put(opts, :current_ip, "0.0.0.0")
+      end
+
+      def call(acc, opts) do
+        acc
+        |> assign(:from, opts.current_ip)
+        |> assign(:extra, opts.extra_info)
+      end
+    end
+
+    defmodule BuilderUsesPlugingWithConfig do
+      use Plugin.Builder
+
+      plug PluginWithConfig, %{extra_info: "some_info"}
+    end
+
+    it "has information generated in `init`" do
+      acc = Plugin.call(BuilderUsesPlugingWithConfig, %{})
+      assert %{assigns: %{from: "0.0.0.0"}} = acc
+    end
+
+    it "has information passed on `plug` statement" do
+      acc = Plugin.call(BuilderUsesPlugingWithConfig, %{})
+      assert %{assigns: %{extra: "some_info"}} = acc
     end
   end
 end
