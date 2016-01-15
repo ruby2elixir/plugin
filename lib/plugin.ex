@@ -37,19 +37,13 @@ defmodule Plugin do
   use Application
 
   defcallback init(opts) :: opts
-  defcallback call(any, opts) :: {:cont | :stop, any}
+  defcallback call(%{}, opts) :: %{}
 
   @doc """
   Apply plugin to a value with given optins.
   """
   def call(plugin, value, opts \\ []) do
-    case plugin.call(value, opts) do
-      {control, acc} when control in [:stop, :cont] ->
-        acc
-      _ ->
-        #plugin.call(value, opts)
-        raise "expected #{inspect plugin}.call/2 to return :cont or :stop as first element of tuple)"
-    end
+    plugin.call(value, opts)
   end
 
   @doc false
