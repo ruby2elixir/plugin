@@ -21,7 +21,7 @@ defmodule PluginTest do
       assert %{halted: true} = Plugin.call(SinglePlugin, %{test1: true})
     end
 
-    it "returns acc otherwise" do
+    it "returns non-halted acc otherwise" do
       a =  Plugin.call(SinglePlugin, %{test2: true})
       refute Map.get(a, :halted)
       assert Map.get(a, :test2)
@@ -71,6 +71,56 @@ defmodule PluginTest do
       assert_raise RuntimeError, "expected test1/2 to return a Map", fn ->
         Plugin.call(NoMapReturn, %{test2: true})
       end
+    end
+  end
+
+
+  describe "composed plugins" do
+    defmodule Plugin1 do
+      use Plugin.Builder
+      plug :first_fn
+
+      def first_fn(acc, _) do
+        Map.put(acc, :first_fn_passed, true)
+      end
+    end
+
+    defmodule Plugin2 do
+      use Plugin.Builder
+      plug :second_fn
+
+      def second_fn(acc, _) do
+        Map.put(acc, :second_fn_passed, true)
+      end
+    end
+
+    defmodule Plugin3 do
+      use Plugin.Builder
+      plug Plugin1
+      plug Plugin2
+    end
+
+    defmodule Plugin4EarlyHalt do
+      use Plugin.Builder
+      plug :early_halt
+      plug Plugin1
+      plug Plugin2
+
+      def early_halt(acc, _) do
+        halt(acc)
+      end
+    end
+
+    it "executes plugins in proper order" do
+      acc = Plugin.call(Plugin3, %{})
+      assert Map.get(acc, :first_fn_passed)
+      assert Map.get(acc, :second_fn_passed)
+    end
+
+    it "returns halted response earlier" do
+      acc = Plugin.call(Plugin4EarlyHalt, %{})
+      refute Map.get(acc, :first_fn_passed)
+      refute Map.get(acc, :second_fn_passed)
     end
   end
 end
