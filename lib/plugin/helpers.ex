@@ -1,5 +1,10 @@
 defmodule Plugin.Helpers do
-
+  @doc false
+  defmacro __using__(_opts) do
+    quote do
+      import Plugin.Helpers
+    end
+  end
 
 
   @doc """
