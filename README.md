@@ -3,7 +3,7 @@
 Basically a light version of [Plug](https://github.com/elixir-lang/plug).
 
 Think:
-  - `Plug` without web-specific logic and typed `Conn` type.
+  - `Plug` without web-specific logic and without a typed `Conn` type.
 
 
 ## Story
