@@ -17,17 +17,26 @@ defmodule Plugin.Builder do
         import AnotherModule, only: [interesting_plugin: 2]
         plug :interesting_plugin
 
-        def hello(value, opts) do
-          if opts[:upper], do: "WORLD", else: "world"
+        def hello(acc, opts) do
+          body = if opts[:upper], do: "WORLD", else: "world"
+          Map.put(acc, :body, body)
         end
       end
 
-  Multiple Plugins can be defined with the `plug/2` macro, forming a pipeline.
+  Multiple plugins can be defined with the `plug/2` macro, forming a pipeline.
 
   The plugins in the pipeline will be executed in the order they've been added
   through the `plug/2` macro. In the example above, `Plugin.Logger` will be
   called first and then the `:hello` function plugin will be called on the
   resulting value.
+
+
+  ## Options
+
+  When used, the following options are accepted by `Plugin.Builder`:
+
+    * `:log_on_halt` - accepts the level to log whenever the request is halted
+
 
   ## Plugin behaviour
 
@@ -87,6 +96,7 @@ defmodule Plugin.Builder do
 
       defoverridable [init: 1, call: 2]
 
+      import Plugin.Helpers
       import Plugin.Builder, only: [plug: 1, plug: 2]
 
       Module.register_attribute(__MODULE__, :plugins, accumulate: true)
@@ -190,9 +200,10 @@ defmodule Plugin.Builder do
 
     quote do
       case unquote(compile_guards(call, guards)) do
-        {:stop, acc} ->
-          {:stop, acc}
-        {:cont, acc} ->
+        %{halted: true} = acc ->
+          # unquote(log_halt(plug_type, plug, env, builder_opts))
+          acc
+        %{} = acc ->
           unquote(acc)
         _ ->
           raise unquote(error_message)
@@ -218,6 +229,22 @@ defmodule Plugin.Builder do
         true when unquote(guards) -> unquote(call)
         true -> acc
       end
+    end
+  end
+
+  defp log_halt(plug_type, plugin, env, builder_opts) do
+    if level = builder_opts[:log_on_halt] do
+      message = case plugin_type do
+        :module   -> "#{inspect env.module} halted in #{inspect plugin}.call/2"
+        :function -> "#{inspect env.module} halted in #{inspect plugin}/2"
+      end
+
+      quote do
+        require Logger
+        Logger.unquote(level)(unquote(message))
+      end
+    else
+      nil
     end
   end
 end
