@@ -1,4 +1,4 @@
-# Plugin
+# Plugin - to structure your business logic in composable blocks!
 
 Basically a light version of [Plug](https://github.com/elixir-lang/plug).
 
@@ -17,29 +17,62 @@ So, I'd like to have a small library to help me build small modules that can be 
 
 It gave me the initial direction, but it had no unit tests and was quite unusable.
 
-So, I rewrote some bits and here we are:
-
-- Plugin - to structure your business logic in composable blocks!
+So, I rewrote some bits and here we are.
 
 
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
   1. Add plugin to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:plugin, "~> 0.0.1"}]
+          [{:plugin, "~> 0.1.0"}]
         end
 
-  2. Ensure plugin is started before your application:
 
-        def application do
-          [applications: [:plugin]]
-        end
+## Usage
 
-## Inspired by `plug`
+All the rules how you structure/implement Plugs apply here:
+- Module Plugins
+- Function Plugins
+- Builder Plugins
+
+
+Example for Builder plugins:
+
+```elixir
+defmodule Plugin1 do
+  use Plugin.Builder
+  plugin :first_fn
+
+  def first_fn(acc, _) do
+    Map.put(acc, :first_fn_passed, true)
+  end
+end
+
+defmodule Plugin2 do
+  use Plugin.Builder
+  plugin :second_fn
+
+  def second_fn(acc, _) do
+    Map.put(acc, :second_fn_passed, true)
+  end
+end
+
+defmodule Plugin3 do
+  use Plugin.Builder
+  plugin Plugin1
+  plugin Plugin2
+end
+
+acc = Plugin.call(Plugin3, %{})
+true = Map.get(acc, :first_fn_passed)
+true = Map.get(acc, :second_fn_passed)
+```
+
+
+
+## Most of the code is directly taken from `plug`.
 
 License for part of codes:
 
@@ -56,38 +89,3 @@ Copyright (c) 2013 Plataformatec.
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-
-Modified by
-
-## Usage
-
-```elixir
-defmodule Test do
-  use Plugin.Builder
-
-  plug :test1, []
-  plug :test2, []
-
-  def test1(acc, _) do
-    if acc[:test1] do
-      {:stop, :test1}
-    else
-      {:cont, acc}
-    end
-  end
-
-  def test2(acc, _) do
-    {:stop, :test2}
-  end
-end
-
-defmodule TestNext do
-  use Plugin.Builder
-
-  plug Test
-
-end
-
-Plugin.call(TestNext, %{test1: true})
-TestNext.call(%{test1: true})
-```
