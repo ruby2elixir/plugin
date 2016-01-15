@@ -23,7 +23,7 @@ defmodule Plugin.Builder do
         end
       end
 
-  Multiple plugins can be defined with the `plug/2` macro, forming a pipeline.
+  Multiple plugins can be defined with the `plugin/2` macro, forming a pipeline.
 
   The plugins in the pipeline will be executed in the order they've been added
   through the `plugin/2` macro. In the example above, `Plugin.Logger` will be
