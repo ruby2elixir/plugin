@@ -194,8 +194,8 @@ defmodule Plugin.Builder do
     call = quote_plugin_call(plugin_type, plugin, opts)
 
     error_message = case plugin_type do
-      :module   -> "expected #{inspect plugin}.call/2 to return :cont or :stop as first element of tuple"
-      :function -> "expected #{plugin}/2 to return a :cont or :stop as first element of tuple"
+      :module   -> "expected #{inspect plugin}.call/2 to return a Map"
+      :function -> "expected #{plugin}/2 to return a Map"
     end
 
     quote do
