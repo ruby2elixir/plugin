@@ -40,10 +40,16 @@ defmodule Plugin do
   defcallback call(%{}, opts) :: %{}
 
   @doc """
-  Apply plugin to a value with given optins.
+  Apply plugin to a acc with given optins.
   """
-  def call(plugin, value, opts \\ []) do
-    plugin.call(value, opts)
+  def call(plugin, acc, opts \\ []) do
+    case plugin.call(acc, opts) do
+      %{} = res ->
+        res
+      _ ->
+        raise "expected #{inspect plugin}.call/2 to return a Map."
+    end
+
   end
 
   @doc false
