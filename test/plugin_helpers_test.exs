@@ -16,6 +16,11 @@ defmodule PluginHelpersTest do
       acc = %{}
       assert assign(acc, :my_key, "my_value")  == %{assigns: %{my_key: "my_value"}}
     end
+
+    it "retains the old values" do
+      acc = %{} |> assign(:second, 2) |> assign(:first, 1)
+      assert acc == %{assigns: %{first: 1, second: 2}}
+    end
   end
 
 end
