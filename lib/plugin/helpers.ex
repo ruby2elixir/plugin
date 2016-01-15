@@ -31,7 +31,7 @@ defmodule Plugin.Helpers do
   invoked. See the docs for `Plug.Builder` for more information on halting a
   plug pipeline.
   """
-  #@spec halt(t) :: t
+  @spec halt(%{}) :: %{}
   def halt(%{} = acc) do
     Map.put(acc, :halted, true)
   end
