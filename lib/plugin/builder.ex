@@ -232,7 +232,7 @@ defmodule Plugin.Builder do
     end
   end
 
-  defp log_halt(plug_type, plugin, env, builder_opts) do
+  defp log_halt(plugin_type, plugin, env, builder_opts) do
     if level = builder_opts[:log_on_halt] do
       message = case plugin_type do
         :module   -> "#{inspect env.module} halted in #{inspect plugin}.call/2"
