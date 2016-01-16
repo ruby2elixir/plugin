@@ -77,20 +77,20 @@ Module Plugin:
 defmodule PluginWithConfig do
   use Plugin.Helpers # small convenience helpers
   def init(opts) do
-    Map.put(opts, :current_ip, "0.0.0.0")
+    Keyword.put(opts, :current_ip, "0.0.0.0")
   end
 
   def call(acc, opts) do
     acc
-    |> assign(:from, opts.current_ip)
-    |> assign(:extra, opts.extra_info)
+    |> assign(:from, Keyword.get(opts, :current_ip) )
+    |> assign(:extra, Keyword.get(opts, :extra_info))
   end
 end
 
 defmodule BuilderUsesPlugingWithConfig do
   use Plugin.Builder
 
-  plugin PluginWithConfig, %{extra_info: "some_info"}
+  plugin PluginWithConfig, extra_info: "some_info"
 end
 
 acc = Plugin.call(BuilderUsesPlugingWithConfig, %{})
