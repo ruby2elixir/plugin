@@ -1,5 +1,6 @@
 defmodule PluginTest do
   use ExSpec, async: true
+  import ExUnit.CaptureLog
   doctest Plugin
 
   describe "single plugin" do
@@ -152,6 +153,38 @@ defmodule PluginTest do
     it "has information passed on `plug` statement" do
       acc = Plugin.call(BuilderUsesPlugingWithConfig, %{})
       assert %{assigns: %{extra: "some_info"}} = acc
+    end
+  end
+
+
+  describe "logging on halt" do
+    defmodule PlugingWithHalt do
+      use Plugin.Builder
+      plugin :fn_1
+      plugin :fn_2
+      plugin :fn_3
+
+      def fn_1(acc, _), do: acc |> Map.put(:fn_1, true)
+      def fn_2(acc, _), do: acc |> Map.put(:fn_2, true) |> halt
+      def fn_3(acc, _), do: acc |> Map.put(:fn_3, true)
+    end
+
+    defmodule PlugingWithHaltLogging do
+      use Plugin.Builder, log_on_halt: :debug
+      plugin PlugingWithHalt
+    end
+
+    it "logs output" do
+      stdout = capture_log(fn ->Plugin.call(PlugingWithHaltLogging, %{}) end)
+      assert String.contains?(stdout, "PluginTest.PlugingWithHaltLogging halted in PluginTest.PlugingWithHalt.call/2")
+    end
+
+    it "stops after fn_2" do
+      acc = Plugin.call(PlugingWithHaltLogging, %{})
+      assert %{fn_1: true} = acc
+      assert %{fn_2: true} = acc
+      assert %{halted: true} = acc
+      refute acc |> Map.get(:fn_3)
     end
   end
 end
