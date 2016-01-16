@@ -75,7 +75,7 @@ Module Plugin:
 
 ```elixir
 defmodule PluginWithConfig do
-  use Plugin.Helpers # small convinience helpers
+  use Plugin.Helpers # small convenience helpers
   def init(opts) do
     Map.put(opts, :current_ip, "0.0.0.0")
   end
