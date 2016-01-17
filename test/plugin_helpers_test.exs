@@ -23,4 +23,16 @@ defmodule PluginHelpersTest do
     end
   end
 
+
+  describe "assigned" do
+    it "returns a value from assigns in acc"  do
+      acc = %{} |> assign(:second, 2) |> assign(:first, 1)
+      assert (acc |> assigned(:second)) == 2
+    end
+
+    it "returns nil, if assigns were not set" do
+      assert (%{} |> assigned(:second)) == nil
+    end
+  end
+
 end

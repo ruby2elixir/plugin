@@ -26,6 +26,25 @@ defmodule Plugin.Helpers do
      Map.put(acc, :assigns, assigns)
   end
 
+
+  @doc """
+  Returns assigned value for a key from the acc
+
+  ## Examples
+
+      iex> assigned(acc, :hello)
+      nil
+      iex> acc = assign(acc, :hello, :world)
+      iex> assigned(acc, :hello)
+      :world
+
+  """
+  @spec assigned(%{}, atom) :: term
+  def assigned(%{} = acc, key) when is_atom(key) do
+     assigns = (Map.get(acc, :assigns) || %{})
+     Map.get(assigns, key)
+  end
+
   @doc """
   Halts the Plug pipeline by preventing further plugs downstream from being
   invoked. See the docs for `Plug.Builder` for more information on halting a
