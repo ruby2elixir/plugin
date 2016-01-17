@@ -40,7 +40,7 @@ defmodule Plugin do
   defcallback call(%{}, opts) :: %{}
 
   @doc """
-  Apply plugin to an acc with given optins.
+  Apply plugin to an `acc` (accumulated value as Map) with given optins.
   """
   def call(plugin, acc, opts \\ []) do
     case plugin.call(acc, opts) do
