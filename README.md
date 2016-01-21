@@ -121,3 +121,10 @@ Copyright (c) 2013 Plataformatec.
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
+
+## Some links why you might consider "Middleware Pattern" as a general solution pattern even outside of web request / response cycle:
+  - https://twitter.com/mitchellh/status/237389160976101377
+  - https://twitter.com/mitchellh/status/235211110087786496
+  - http://programmers.stackexchange.com/questions/203314/what-is-the-middleware-pattern
+  - http://blog.carbonfive.com/2014/12/14/composing-data-pipelines-mostly-stateless-web-applications-in-clojure/
+  - https://speakerdeck.com/swlaschin/railway-oriented-programming-a-functional-approach-to-error-handling
