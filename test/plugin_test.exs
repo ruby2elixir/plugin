@@ -29,7 +29,7 @@ defmodule PluginTest do
   end
 
 
-  describe "single plugin with multiple plug statements" do
+  describe "single plugin with multiple plugin statements" do
     defmodule SinglePluginMultiStatements do
       use Plugin.Builder
       plugin :test1, []

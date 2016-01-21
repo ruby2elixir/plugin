@@ -1,9 +1,9 @@
-# Plugin - to structure your business logic in composable blocks!
+# `Plugin` helps you to structure your business logic in composable blocks.
 
-Basically a light version of [Plug](https://github.com/elixir-lang/plug).
+Basically a light version of [Plug](https://github.com/elixir-lang/plug). Most of the code is a straight copy from Plug,
 
 Think:
-  - `Plug` without web-specific logic and without a typed `Conn` type.
+  - `Plug` without web-specific logic and without a typed `Conn`.
 
 
 ## Story
