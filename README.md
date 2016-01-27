@@ -100,8 +100,9 @@ acc = Plugin.call(BuilderUsesPlugingWithConfig, %{})
 
 
 To learn more about Plug please watch following freshly (2016/01) released videos:
-  - [Elixir Louisville: Plug, Friend of Web Developers](https://www.youtube.com/watch?v=-gev84S9_-c) -
+  - [Elixir Louisville: Plug, Friend of Web Developers](https://www.youtube.com/watch?v=-gev84S9_-c)
   - [Elixir Louisville: Plug, Friend of Web Developers - Demo](https://www.youtube.com/watch?v=tfRD_e-yvOE)
+  - [Elixir Plug unveiled - 2015/09](https://medium.com/@kansi/elixir-plug-unveiled-bf354e364641#.phulhbtrd)
 
 
 ## Most of the code is taken directly from `plug`.
