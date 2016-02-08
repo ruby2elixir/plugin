@@ -1,12 +1,14 @@
 defmodule Plugin.Mixfile do
   use Mix.Project
+  @version "0.1.0"
 
   def project do
     [app: :plugin,
-     version: "0.1.0",
+     version: @version,
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     package: package,
      deps: deps]
   end
 
@@ -30,6 +32,18 @@ defmodule Plugin.Mixfile do
     [
       {:mix_test_watch, "~> 0.2", only: :dev},
       {:ex_spec, "~> 1.0", only: :test}
+    ]
+  end
+
+  defp package do
+    [
+     maintainers: ["Roman Heinrich"],
+     licenses: ["MIT License"],
+     description: "Like Plug, but for general purpose apps - a specification and conveniences for composable modules between applications",
+     links: %{
+       github: "https://github.com/ruby2elixir/plugin",
+       docs: "http://hexdocs.pm/plugin/#{@version}/"
+     }
     ]
   end
 end
