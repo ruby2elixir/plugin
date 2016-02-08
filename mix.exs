@@ -39,7 +39,7 @@ defmodule Plugin.Mixfile do
     [
      maintainers: ["Roman Heinrich"],
      licenses: ["MIT License"],
-     description: "Like Plug, but for general purpose apps - a specification and conveniences for composable modules between applications",
+     description: "Like Plug, only without web-specific logic and without a typed Conn-datastructure",
      links: %{
        github: "https://github.com/ruby2elixir/plugin",
        docs: "http://hexdocs.pm/plugin/#{@version}/"
